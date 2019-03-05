@@ -51,7 +51,7 @@ public class Board {
 	 * @return
 	 */
 	public int manhattan() {
-		return 0;//TODO
+		return 0;//TODO Chris
 	}
 	
 	/**
@@ -60,7 +60,7 @@ public class Board {
 	 * @return
 	 */
 	public boolean isGoal() {
-		return false;//TODO
+		return false;//TODO Chris
 	}
 	
 	/**
@@ -85,7 +85,7 @@ public class Board {
 	 * @return
 	 */
 	public Iterable<Board> neighbors() {
-		return null;//TODO
+		return null;//TODO Chris
 	}
 	
 	/**
