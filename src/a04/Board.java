@@ -12,6 +12,8 @@ package a04;
  *
  */
 public class Board {
+	private int[][] blocks;
+	private int N;
 	
 	/**
 	 * Initializes the board from an N by N array of blocks
@@ -19,7 +21,8 @@ public class Board {
 	 * @param blocks
 	 */
 	public Board(int[][] blocks) {
-		//TODO
+		this.blocks = blocks;
+		N = blocks.length;
 	}
 	
 	/**
@@ -27,7 +30,7 @@ public class Board {
 	 * @return
 	 */
 	public int size() {
-		return 0;//TODO
+		return N;
 	}
 	
 	/**
@@ -94,7 +97,15 @@ public class Board {
 	 *  
 	 */
 	public String toString() {
-		return null;//TODO
+		StringBuilder sb = new StringBuilder();
+		sb.append(N + "\n");
+		for (int i = 0; i < N; i++) {
+			for (int j = 0; j < N; j++) {
+				sb.append(String.format("%2d ", blocks[i][j]));
+			}
+			sb.append("\n");
+		}
+		return sb.toString();//TODO
 	}
 	
 	/**
@@ -110,6 +121,13 @@ public class Board {
 
 	/* * * * * * * * * * Test Client * * * * * * * * * */
 	public static void main(String[] args) {
-		
+		int[][] tiles = {
+				{0,1,2},
+				{3,4,5},
+				{6,7,8}
+		};
+		Board test = new Board(tiles);
+		System.out.println("Test size: " + test.size());
+		System.out.println(test.toString());
 	}
 }
