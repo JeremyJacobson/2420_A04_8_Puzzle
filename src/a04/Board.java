@@ -39,7 +39,7 @@ public class Board {
 	 * @return
 	 */
 	public int hamming() {
-		return 0;//TODO
+		return 0;//TODO Jeremy
 	}
 	
 	/**
@@ -69,7 +69,7 @@ public class Board {
 	 * @return
 	 */
 	public boolean isSolvable() {
-		return false;//TODO
+		return false;//TODO Jeremy
 	}
 	
 	/**
@@ -77,7 +77,7 @@ public class Board {
 	 * @return
 	 */
 	public boolean equals(Object y) {
-		return false;//TODO
+		return false;//TODO Jeremy
 	}
 	
 	/**
@@ -105,7 +105,7 @@ public class Board {
 			}
 			sb.append("\n");
 		}
-		return sb.toString();//TODO
+		return sb.toString();
 	}
 	
 	/**
@@ -116,7 +116,7 @@ public class Board {
 	 * @return
 	 */
 	public int tileAt(int row, int col) {
-		return 0;//TODO
+		return 0;//TODO Jeremy
 	}
 
 	/* * * * * * * * * * Test Client * * * * * * * * * */
