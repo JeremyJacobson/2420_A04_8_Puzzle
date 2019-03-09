@@ -51,7 +51,9 @@ public class Board {
 	 * @return
 	 */
 	public int manhattan() {
-		return 0;//TODO Chris
+		int manhattan = 0;
+		
+		return manhattan;//TODO Chris
 	}
 	
 	/**
@@ -60,7 +62,24 @@ public class Board {
 	 * @return
 	 */
 	public boolean isGoal() {
-		return false;//TODO Chris
+		if (blocks[N - 1][N - 1] != 0) {			// If 0 is not at the bottom right corner
+			return false;							// then the puzzle is not solved.
+		}
+		
+		int num = 1;
+		for (int i = 0; i < N; i++) {				// If Array is at the last spot, it sets {num}
+			for (int j = 0; j < N; j++) {			// to 0 so that when the 2D Array is in ascending
+				if (i == N - 1 && j == N - 1) {		// order, and the last spot is 0, it is considered
+					num = 0;						// solved.
+				}
+
+				if (blocks[i][j] != num++) {		// Iterates through 2D Array to check if
+					return false; 					// the numbers 1 through N - 1 are in ascending
+													// order.						
+				}
+			}
+		}
+		return true;								// If conditions above pass, the puzzle is solved.
 	}
 	
 	/**
@@ -121,13 +140,26 @@ public class Board {
 
 	/* * * * * * * * * * Test Client * * * * * * * * * */
 	public static void main(String[] args) {
-		int[][] tiles = {
-				{0,1,2},
-				{3,4,5},
-				{6,7,8}
+		int[][] tilesSolved = {
+				{1,2,3},
+				{4,5,6},
+				{7,8,0}
 		};
-		Board test = new Board(tiles);
-		System.out.println("Test size: " + test.size());
-		System.out.println(test.toString());
+		Board testSolved = new Board(tilesSolved);
+		System.out.println("Test size: " + testSolved.size());
+		System.out.println(testSolved.toString());
+		System.out.println(testSolved.isGoal());
+		System.out.println();
+		
+		int[][] tilesNotSolved = {
+				{8,2,3},
+				{4,5,6},
+				{7,1,0}
+		};
+		Board testNotSolved = new Board(tilesNotSolved);
+		System.out.println("Test size: " + testNotSolved.size());
+		System.out.println(testNotSolved.toString());
+		System.out.println(testNotSolved.isGoal());
+		System.out.println();
 	}
 }
