@@ -5,6 +5,8 @@
  *************************************************/
 package a04;
 
+import java.util.Arrays;
+
 /**
  * Implements an immutable data type Board for an 8 puzzle 
  * that contains a multidimensional array of blocks with the 
@@ -14,6 +16,7 @@ package a04;
 public class Board {
 	private int[][] blocks;
 	private int N;
+	private int zero;
 	
 	/**
 	 * Initializes the board from an N by N array of blocks
@@ -49,7 +52,9 @@ public class Board {
 		for (int i = 0; i < N; i++) {
 			for (int j = 0; j < N; j++) {
 				if (i == N - 1 && j == N - 1) {
-					num = 0;
+					num = 0;										// If checking bottom right of puzzle, setting
+																	// {num} to 0 so the next if statement below
+																	// can check which numbers are out of place.
 				}
 				
 				if (blocks[i][j] != num++) {						// If 2D array is not in ascending order, it
@@ -70,28 +75,31 @@ public class Board {
 	 */
 	public int manhattan() {
 		int manhattan = 0;
-		int num = 1;
 		
 		if (isGoal()) {												// If the puzzle is already solved, then
 			return manhattan;										// the manhattan is 0.
 		}
 		
+		int[] temp = new int[N * N];								// Used to convert blocks array to 1d array.
+		int transfer = 0;
 		for (int i = 0; i < N; i++) {
 			for (int j = 0; j < N; j++) {
-				if (i == N - 1 && j == N - 1) {
-					num = 0;										// If checking bottom right of puzzle, setting
-																	// {num} to 0 so the next if statement below 
-																	// can check which numbers are out of place.
-				}
-
-				if (blocks[i][j] != num++) {
-					manhattan += Math.abs((i / N) - (blocks[i][j] / N));
-					manhattan += Math.abs((i % N) - (blocks[i][j] % N));
-				}
+				temp[transfer++] = blocks[i][j];					// Transferring to 1D Array.
 			}
 		}
-		return manhattan - 1;										// Manhattan minus 1, since we don't need to
-																	// account for 0 since our puzzles start at 1
+		
+		for (int i = 0; i < temp.length; i++) {
+			if (temp[i] == i + 1 || temp[i] == 0) {					// If number is in correct place or equals 0
+				continue;											// then skips the number.
+			}
+			manhattan += Math.abs((i / N) - ((temp[i] - 1) / N));	// Accounts for how many rows the current
+																	// number is off.
+			
+			manhattan += Math.abs((i % N) - ((temp[i] - 1) % N));	// Accounts for how many columns the current
+																	// number is off.
+		}
+		
+		return manhattan;
 	}
 	
 	/**
@@ -186,20 +194,20 @@ public class Board {
 		Board testSolved = new Board(tilesSolved);
 		System.out.println("Test size: " + testSolved.size());
 		System.out.println(testSolved.toString());
-		System.out.println(testSolved.isGoal());
+		System.out.println("Is goal? " + testSolved.isGoal());
 		System.out.println(testSolved.manhattan() + " is the manhattan");
 		System.out.println(testSolved.hamming() + " is the hamming");
 		System.out.println();
 		
 		int[][] tilesNotSolved = {
-				{1,5,2},
-				{4,0,3},
+				{1,2,3},
+				{4,5,0},
 				{7,8,6}
 		};
 		Board testNotSolved = new Board(tilesNotSolved);
 		System.out.println("Test size: " + testNotSolved.size());
 		System.out.println(testNotSolved.toString());
-		System.out.println(testNotSolved.isGoal());
+		System.out.println("Is goal? " + testNotSolved.isGoal());
 		System.out.println(testNotSolved.manhattan() + " is the manhattan");
 		System.out.println(testNotSolved.hamming() + " is the hamming");
 		System.out.println();
