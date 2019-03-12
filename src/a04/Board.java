@@ -5,8 +5,6 @@
  *************************************************/
 package a04;
 
-import java.util.Arrays;
-
 /**
  * Implements an immutable data type Board for an 8 puzzle 
  * that contains a multidimensional array of blocks with the 
