@@ -17,7 +17,8 @@ public class Board {
 	private int[][] blocks;
 	private int N;
 	private int zeroIndex;
-	private int[] twoToOne;
+	private int[] oneD;
+	private Stack<Board> neighbors = new Stack<Board>();
 	
 	/**
 	 * Initializes the board from an N by N array of blocks
@@ -27,6 +28,13 @@ public class Board {
 	public Board(int[][] blocks) {
 		this.blocks = blocks;
 		N = blocks.length;
+		oneD = new int[N * N];										// Used to convert blocks array to 1d array.
+		int transfer = 0;
+		for (int i = 0; i < N; i++) {
+			for (int j = 0; j < N; j++) {
+				oneD[transfer++] = blocks[i][j];					// Transferring to 1D Array.
+			}
+		}
 	}
 	
 	/**
@@ -44,28 +52,18 @@ public class Board {
 	 */
 	public int hamming() {
 		int hamming = 0;
-		int num = 1;
 		
 		if (isGoal()) {													// If the puzzle is already solved, then
 			return hamming;												// the hamming is 0.
 		}
 		
-		for (int i = 0; i < N; i++) {
-			for (int j = 0; j < N; j++) {
-				if (i == N - 1 && j == N - 1) {
-					num = 0;											// If checking bottom right of puzzle, setting
-																		// {num} to 0 so the next if statement below
-																		// can check which numbers are out of place.
-				}
-				
-				if (blocks[i][j] != num++) {							// If 2D array is not in ascending order, it
-					hamming++;											// tallies up the {hamming} variable so it can
-																		// keep track of how many numbers are not in order.
-				}
+		for (int i = 0; i < oneD.length; i++) {
+			if (oneD[i] != i + 1 && oneD[i] != 0) {				// If the tiles are not in ascending order
+				hamming++;												// it adds to the hamming variable. Skips 0.
 			}
 		}
-		return hamming - 1;												// hamming minus 1 since we don't need to account
-																		// for the 0 being out of place.
+
+		return hamming;
 	}
 	
 	/**
@@ -81,26 +79,18 @@ public class Board {
 			return manhattan;											// the manhattan is 0.
 		}
 		
-		twoToOne = new int[N * N];										// Used to convert blocks array to 1d array.
-		int transfer = 0;
-		for (int i = 0; i < N; i++) {
-			for (int j = 0; j < N; j++) {
-				twoToOne[transfer++] = blocks[i][j];					// Transferring to 1D Array.
-			}
-		}
-		
-		for (int i = 0; i < twoToOne.length; i++) {
-			if (twoToOne[i] == i + 1 || twoToOne[i] == 0) {				// If number is in correct place or equals 0
+		for (int i = 0; i < oneD.length; i++) {
+			if (oneD[i] == i + 1 || oneD[i] == 0) {						// If number is in correct place or equals 0
 																		// then skips the number.
-				if (twoToOne[i] == 0) {
+				if (oneD[i] == 0) {
 					zeroIndex = i;										// Records the index of 0 on the board.
 				}
 				continue;
 			}
-			manhattan += Math.abs((i / N) - ((twoToOne[i] - 1) / N));	// Accounts for how many rows the current
+			manhattan += Math.abs((i / N) - ((oneD[i] - 1) / N));		// Accounts for how many rows the current
 																		// number is off.
 			
-			manhattan += Math.abs((i % N) - ((twoToOne[i] - 1) % N));	// Accounts for how many columns the current
+			manhattan += Math.abs((i % N) - ((oneD[i] - 1) % N));		// Accounts for how many columns the current
 																		// number is off.
 		}
 		
@@ -140,13 +130,13 @@ public class Board {
 	 */
 	public boolean isSolvable() {
 		// turn 2D array into 1D array O(n)
-		int[] oneD = new int[N * N];
-
-		for (int i = 0; i < N; i++) {
-			for (int j = 0; j < N; j++) {
-				oneD[(i * N) + j] = blocks[i][j];
-			}
-		}
+//		int[] oneD = new int[N * N];
+//
+//		for (int i = 0; i < N; i++) {
+//			for (int j = 0; j < N; j++) {
+//				oneD[(i * N) + j] = blocks[i][j];
+//			}
+//		}
 
 		// count the number of inversions in 1D array O(n log n)?
 		int inversions = 0;
@@ -200,13 +190,67 @@ public class Board {
 	 * @return
 	 */
 	public Iterable<Board> neighbors() {
-		Stack<Board> neighbors = new Stack<Board>();
+		int[] temp = oneD.clone();
+
+		if (zeroIndex < oneD.length - N) {							// Calculates if the 0 Tile is on the top 
+			southNeighbor(temp, zeroIndex);								// 2 rows. If so, the 0 Tile can be swapped
+		}																// with the Tile below.
 		
-		if (zeroIndex / 6 )
+		if (zeroIndex > N - 1) {
+			northNeighbor(temp, zeroIndex);
+		}
+		
 		return neighbors; // TODO
 	}
+
+	/* = = = = = = HELPER METHODS START = = = = = = */
 	
+	/**
+	 * 
+	 * @param temp
+	 * @param zeroIndex2
+	 */
+	private void northNeighbor(int[] temp, int zeroIndex2) {
+		// TODO Auto-generated method stub
+		
+	}
 	
+	/***
+	 * Swaps the 0 tile with the tile below it.
+	 * @param temp1
+	 * @param zeroIndex2
+	 */
+	private void southNeighbor(int[] temp1, int zeroIndex2) {
+		int swapTile = temp1[zeroIndex2 + 3];
+		
+		temp1[zeroIndex2] = swapTile;
+		temp1[zeroIndex2 + 3] = 0;
+		neighbors.push(neighborBoard(temp1));							// Creates a new board and pushes it onto a 
+																		// Stack of Boards.
+	}
+
+	/***
+	 * Passes a 1 Dimensional Array to a 2 Dimensional Array,
+	 * then constructs a new Board from that array, and returns
+	 * the new Board.
+	 * @param temp1
+	 * @return
+	 */
+	private Board neighborBoard(int[] temp1) {
+		int[][] temp = new int[N][N];
+		int transfer = 0;
+		
+		for (int i = 0; i < N; i++) {
+			for (int j = 0; j < N; j++) {
+				temp[i][j] = temp1[transfer++];
+			}
+		}
+		
+		Board neighborBoard = new Board(temp);
+		return neighborBoard;
+	}
+
+	/* = = = = = = HELPER METHODS FINISH = = = = = = */
 	
 	/**
 	 * Returns a string in the format:
@@ -266,6 +310,7 @@ public class Board {
 		System.out.println(testNotSolved.manhattan() + " is the manhattan");
 		System.out.println(testNotSolved.hamming() + " is the hamming");
 		System.out.println();
-		System.out.println(5 / 6);
+		
+		
 	}
 }
