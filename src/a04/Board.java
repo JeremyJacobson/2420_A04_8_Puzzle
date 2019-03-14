@@ -5,6 +5,8 @@
  *************************************************/
 package a04;
 
+import edu.princeton.cs.algs4.Stack;
+
 /**
  * Implements an immutable data type Board for an 8 puzzle 
  * that contains a multidimensional array of blocks with the 
@@ -14,7 +16,8 @@ package a04;
 public class Board {
 	private int[][] blocks;
 	private int N;
-	private int zero;
+	private int zeroIndex;
+	private int[] twoToOne;
 	
 	/**
 	 * Initializes the board from an N by N array of blocks
@@ -43,26 +46,26 @@ public class Board {
 		int hamming = 0;
 		int num = 1;
 		
-		if (isGoal()) {												// If the puzzle is already solved, then
-			return hamming;											// the hamming is 0.
+		if (isGoal()) {													// If the puzzle is already solved, then
+			return hamming;												// the hamming is 0.
 		}
 		
 		for (int i = 0; i < N; i++) {
 			for (int j = 0; j < N; j++) {
 				if (i == N - 1 && j == N - 1) {
-					num = 0;										// If checking bottom right of puzzle, setting
-																	// {num} to 0 so the next if statement below
-																	// can check which numbers are out of place.
+					num = 0;											// If checking bottom right of puzzle, setting
+																		// {num} to 0 so the next if statement below
+																		// can check which numbers are out of place.
 				}
 				
-				if (blocks[i][j] != num++) {						// If 2D array is not in ascending order, it
-					hamming++;										// tallies up the {hamming} variable so it can
-																	// keep track of how many numbers are not in order.
+				if (blocks[i][j] != num++) {							// If 2D array is not in ascending order, it
+					hamming++;											// tallies up the {hamming} variable so it can
+																		// keep track of how many numbers are not in order.
 				}
 			}
 		}
-		return hamming - 1;											// hamming minus 1 since we don't need to account
-																	// for the 0 being out of place.
+		return hamming - 1;												// hamming minus 1 since we don't need to account
+																		// for the 0 being out of place.
 	}
 	
 	/**
@@ -74,27 +77,31 @@ public class Board {
 	public int manhattan() {
 		int manhattan = 0;
 		
-		if (isGoal()) {												// If the puzzle is already solved, then
-			return manhattan;										// the manhattan is 0.
+		if (isGoal()) {													// If the puzzle is already solved, then
+			return manhattan;											// the manhattan is 0.
 		}
 		
-		int[] temp = new int[N * N];								// Used to convert blocks array to 1d array.
+		twoToOne = new int[N * N];										// Used to convert blocks array to 1d array.
 		int transfer = 0;
 		for (int i = 0; i < N; i++) {
 			for (int j = 0; j < N; j++) {
-				temp[transfer++] = blocks[i][j];					// Transferring to 1D Array.
+				twoToOne[transfer++] = blocks[i][j];					// Transferring to 1D Array.
 			}
 		}
 		
-		for (int i = 0; i < temp.length; i++) {
-			if (temp[i] == i + 1 || temp[i] == 0) {					// If number is in correct place or equals 0
-				continue;											// then skips the number.
+		for (int i = 0; i < twoToOne.length; i++) {
+			if (twoToOne[i] == i + 1 || twoToOne[i] == 0) {				// If number is in correct place or equals 0
+																		// then skips the number.
+				if (twoToOne[i] == 0) {
+					zeroIndex = i;										// Records the index of 0 on the board.
+				}
+				continue;
 			}
-			manhattan += Math.abs((i / N) - ((temp[i] - 1) / N));	// Accounts for how many rows the current
-																	// number is off.
+			manhattan += Math.abs((i / N) - ((twoToOne[i] - 1) / N));	// Accounts for how many rows the current
+																		// number is off.
 			
-			manhattan += Math.abs((i % N) - ((temp[i] - 1) % N));	// Accounts for how many columns the current
-																	// number is off.
+			manhattan += Math.abs((i % N) - ((twoToOne[i] - 1) % N));	// Accounts for how many columns the current
+																		// number is off.
 		}
 		
 		return manhattan;
@@ -106,24 +113,24 @@ public class Board {
 	 * @return
 	 */
 	public boolean isGoal() {
-		if (blocks[N - 1][N - 1] != 0) {							// If 0 is not at the bottom right corner
-			return false;											// then the puzzle is not solved.
+		if (blocks[N - 1][N - 1] != 0) {								// If 0 is not at the bottom right corner
+			return false;												// then the puzzle is not solved.
 		}
 		
 		int num = 1;
-		for (int i = 0; i < N; i++) {								// If Array is at the last spot, it sets {num}
-			for (int j = 0; j < N; j++) {							// to 0 so that when the 2D Array is in ascending
-				if (i == N - 1 && j == N - 1) {						// order, and the last spot is 0, it is considered
-					num = 0;										// solved.
+		for (int i = 0; i < N; i++) {									// If Array is at the last spot, it sets {num}
+			for (int j = 0; j < N; j++) {								// to 0 so that when the 2D Array is in ascending
+				if (i == N - 1 && j == N - 1) {							// order, and the last spot is 0, it is considered
+					num = 0;											// solved.
 				}
 
-				if (blocks[i][j] != num++) {						// Iterates through 2D Array to check if
-					return false; 									// the numbers 1 through N - 1 are in ascending
-																	// order.						
+				if (blocks[i][j] != num++) {							// Iterates through 2D Array to check if
+					return false; 										// the numbers 1 through N - 1 are in ascending
+																		// order.						
 				}
 			}
 		}
-		return true;												// If conditions above pass, the puzzle is solved.
+		return true;													// If conditions above pass, the puzzle is solved.
 	}
 	
 	/**
@@ -148,8 +155,13 @@ public class Board {
 	 * @return
 	 */
 	public Iterable<Board> neighbors() {
-		return null;//TODO Chris
+		Stack<Board> neighbors = new Stack<Board>();
+		
+		if (zeroIndex / 6 )
+		return neighbors; // TODO
 	}
+	
+	
 	
 	/**
 	 * Returns a string in the format:
@@ -198,8 +210,8 @@ public class Board {
 		System.out.println();
 		
 		int[][] tilesNotSolved = {
-				{1,2,3},
-				{4,5,0},
+				{1,2,0},
+				{4,5,3},
 				{7,8,6}
 		};
 		Board testNotSolved = new Board(tilesNotSolved);
@@ -209,5 +221,6 @@ public class Board {
 		System.out.println(testNotSolved.manhattan() + " is the manhattan");
 		System.out.println(testNotSolved.hamming() + " is the hamming");
 		System.out.println();
+		System.out.println(5 / 6);
 	}
 }
