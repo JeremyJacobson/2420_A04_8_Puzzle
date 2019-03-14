@@ -134,12 +134,50 @@ public class Board {
 	}
 	
 	/**
-	 * Returns true if the board can be turned into the
-	 * goal board.
+	 * Returns true if the board can be turned into the goal board.
+	 * 
 	 * @return
 	 */
 	public boolean isSolvable() {
-		return false;//TODO Jeremy
+		// turn 2D array into 1D array O(n)
+		int[] oneD = new int[N * N];
+
+		for (int i = 0; i < N; i++) {
+			for (int j = 0; j < N; j++) {
+				oneD[(i * N) + j] = blocks[i][j];
+			}
+		}
+
+		// count the number of inversions in 1D array O(n log n)?
+		int inversions = 0;
+		for (int i = 0; i < (N * N) - 1; i++) {
+			for (int j = i + 1; j < N * N; j++) {
+				if (oneD[i] > oneD[j] && oneD[i] != 0 && oneD[j] != 0)
+					inversions++;
+			}
+		}
+
+		if (N % 2 == 0) { // even
+			// find row containing blank tile counting from bottom row up O(n)
+			int blankRow;
+			for (int i = N - 1; i >= 0; i--) {
+				for (int j = N - 1; j >= 0; j--) {
+					if (blocks[i][j] == 0) {
+						blankRow = N - i;
+						// solvable if blankRow is even and inversions odd or vice versa
+						if ((blankRow % 2 == 0 && inversions % 2 != 0) || 
+								(blankRow % 2 != 0 && inversions % 2 == 0))
+							return true;
+						else
+							return false;
+					}
+				}
+			}
+		} else { // odd
+			if (inversions % 2 == 0)// solvable if N is odd and inversions is even
+				return true;
+		}
+		return false;
 	}
 	
 	/**
@@ -147,7 +185,14 @@ public class Board {
 	 * @return
 	 */
 	public boolean equals(Object y) {
-		return false;//TODO Jeremy
+		if (y == null)
+			return false;
+		if (y == this)
+			return true;
+		if (y.getClass() != this.getClass())
+			return false;
+		Board other = (Board) y;
+		return (this.blocks == other.blocks) && (this.N == other.N);
 	}
 	
 	/**
