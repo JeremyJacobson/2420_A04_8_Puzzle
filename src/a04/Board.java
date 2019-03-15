@@ -58,7 +58,7 @@ public class Board {
 		}
 		
 		for (int i = 0; i < oneD.length; i++) {
-			if (oneD[i] != i + 1 && oneD[i] != 0) {				// If the tiles are not in ascending order
+			if (oneD[i] != i + 1 && oneD[i] != 0) {						// If the tiles are not in ascending order
 				hamming++;												// it adds to the hamming variable. Skips 0.
 			}
 		}
@@ -192,44 +192,78 @@ public class Board {
 	public Iterable<Board> neighbors() {
 		int[] temp = oneD.clone();
 
-		if (zeroIndex < oneD.length - N) {							// Calculates if the 0 Tile is on the top 
-			southNeighbor(temp, zeroIndex);								// 2 rows. If so, the 0 Tile can be swapped
-		}																// with the Tile below.
-		
+		if (zeroIndex < oneD.length - N) {
+			southNeighbor(temp, zeroIndex);
+		}
 		if (zeroIndex > N - 1) {
 			northNeighbor(temp, zeroIndex);
 		}
 		
-		return neighbors; // TODO
+		if (zeroIndex % N != 0) {
+			westNeighbor(temp, zeroIndex);
+		}
+		
+		if (zeroIndex % N != N - 1) {
+			eastNeighbor(temp, zeroIndex);
+		}
+		return neighbors;
 	}
 
-	/* = = = = = = HELPER METHODS START = = = = = = */
+	/* = = = = = = = = = = = HELPER METHODS START = = = = = = = = = = = */
 	
 	/**
-	 * 
+	 * Swaps the 0 tile with the tile to the right.
 	 * @param temp
-	 * @param zeroIndex2
+	 * @param zeroIndex
 	 */
-	private void northNeighbor(int[] temp, int zeroIndex2) {
-		// TODO Auto-generated method stub
-		
+	private void eastNeighbor(int[] temp, int zeroIndex) {
+		int swapTile = temp[zeroIndex + 1];
+		temp[zeroIndex + 1] = 0;
+		temp[zeroIndex] = swapTile;
+
+		neighbors.push(neighborBoard(temp));
 	}
 	
-	/***
-	 * Swaps the 0 tile with the tile below it.
-	 * @param temp1
-	 * @param zeroIndex2
+	/**
+	 * Swaps the 0 tile with the tile to the left.
+	 * @param temp
+	 * @param zeroIndex
 	 */
-	private void southNeighbor(int[] temp1, int zeroIndex2) {
-		int swapTile = temp1[zeroIndex2 + 3];
-		
-		temp1[zeroIndex2] = swapTile;
-		temp1[zeroIndex2 + 3] = 0;
-		neighbors.push(neighborBoard(temp1));							// Creates a new board and pushes it onto a 
-																		// Stack of Boards.
+	private void westNeighbor(int[] temp, int zeroIndex) {
+		int swapTile = temp[zeroIndex - 1];
+		temp[zeroIndex - 1] = 0;
+		temp[zeroIndex] = swapTile;
+
+		neighbors.push(neighborBoard(temp));
+	}
+	
+	/**
+	 * Swaps the 0 tile with the tile above it.
+	 * @param temp
+	 * @param zeroIndex
+	 */
+	private void northNeighbor(int[] temp, int zeroIndex) {
+		int swapTile = temp[zeroIndex - 3];
+		temp[zeroIndex - 3] = 0;
+		temp[zeroIndex] = swapTile;
+
+		neighbors.push(neighborBoard(temp));
+	}
+	
+	/**
+	 * Swaps the 0 tile with the tile below it.
+	 * @param temp
+	 * @param zeroIndex
+	 */
+	private void southNeighbor(int[] temp, int zeroIndex) {
+		int swapTile = temp[zeroIndex + 3];
+		temp[zeroIndex + 3] = 0;
+		temp[zeroIndex] = swapTile;
+
+		neighbors.push(neighborBoard(temp));
 	}
 
-	/***
+	/**
 	 * Passes a 1 Dimensional Array to a 2 Dimensional Array,
 	 * then constructs a new Board from that array, and returns
 	 * the new Board.
@@ -250,7 +284,7 @@ public class Board {
 		return neighborBoard;
 	}
 
-	/* = = = = = = HELPER METHODS FINISH = = = = = = */
+	/* = = = = = = = = = = = HELPER METHODS FINISH = = = = = = = = = = = */
 	
 	/**
 	 * Returns a string in the format:
@@ -284,7 +318,7 @@ public class Board {
 	}
 
 	/* * * * * * * * * * Test Client * * * * * * * * * */
-	public static void main(String[] args) {
+/*	public static void main(String[] args) {
 		int[][] tilesSolved = {
 				{1,2,3},
 				{4,5,6},
@@ -311,6 +345,5 @@ public class Board {
 		System.out.println(testNotSolved.hamming() + " is the hamming");
 		System.out.println();
 		
-		
-	}
+	}*/
 }
