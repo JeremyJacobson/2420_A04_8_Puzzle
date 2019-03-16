@@ -5,7 +5,10 @@
  *************************************************/
 package a04;
 
+import java.util.Comparator;
+
 import edu.princeton.cs.algs4.In;
+import edu.princeton.cs.algs4.MinPQ;
 import edu.princeton.cs.algs4.StdOut;
 
 /**
@@ -23,7 +26,62 @@ public class Solver {
 	 * @param initial
 	 */
 	public Solver(Board initial) {
-		//TODO
+		PriorityOrderManhattan orderMan = new PriorityOrderManhattan();
+		MinPQ<SearchNode> queue = new MinPQ<SearchNode>(orderMan);
+		SearchNode node = new SearchNode();
+		node.board = initial;
+		queue.insert(node);
+		
+		SearchNode minP = queue.delMin(); // initial node with smallest priority board
+		
+		// while the minimum priority nodes board is not equal to the goal board
+		while(!minP.board.isGoal()) {
+			for (Board el : minP.board.neighbors()) {
+				// Checks if previous is null or if this neighbor does not equal previous board
+				if (minP.previous == null || !el.equals(minP.previous.board)) {
+					SearchNode newNode = new SearchNode();
+					newNode.board = el;
+					newNode.moves = minP.moves + 1;
+					newNode.previous = minP;
+					queue.insert(newNode);
+				}
+				
+			}
+			
+			minP = queue.delMin();
+		}
+	}
+	
+	private class SearchNode {
+		private Board board;
+		private int moves = 0;
+		private SearchNode previous;
+	}
+	
+	private class PriorityOrderManhattan implements Comparator<SearchNode> {
+
+		@Override
+		public int compare(SearchNode o1, SearchNode o2) {
+			if (o1.board.manhattan() + o1.moves > o2.board.manhattan() + o2.moves)
+				return 1;
+			if (o1.board.manhattan() + o1.moves < o2.board.manhattan() + o2.moves)
+				return -1;
+			return 0;
+		}
+		
+	}
+	
+	private class PriorityOrderHamming implements Comparator<SearchNode> {
+
+		@Override
+		public int compare(SearchNode o1, SearchNode o2) {
+			if (o1.board.hamming() + o1.moves > o2.board.hamming() + o2.moves)
+				return 1;
+			if (o1.board.hamming() + o1.moves < o2.board.hamming() + o2.moves)
+				return -1;
+			return 0;
+		}
+		
 	}
 	
 	/**
@@ -47,7 +105,7 @@ public class Solver {
     /* * * * * * * * * * Test Client * * * * * * * * * */
 	public static void main(String[] args) {
 		// create initial board from file
-	    In in = new In(args[0]);
+	    In in = new In("/a04/resources/puzzle04.txt");
 	    int N = in.readInt();
 	    int[][] blocks = new int[N][N];
 	    for (int i = 0; i < N; i++)
