@@ -33,23 +33,30 @@ public class Solver {
 		queue.insert(node);
 		
 		SearchNode minP = queue.delMin(); // initial node with smallest priority board
+		//Prints out neighbors
+		System.out.println(minP.board.toString());
+		for (Board el : minP.board.neighbors()) {
+			System.out.println(el.toString());
+		}
 		
 		// while the minimum priority nodes board is not equal to the goal board
-		while(!minP.board.isGoal()) {
-			for (Board el : minP.board.neighbors()) {
-				// Checks if previous is null or if this neighbor does not equal previous board
-				if (minP.previous == null || !el.equals(minP.previous.board)) {
-					SearchNode newNode = new SearchNode();
-					newNode.board = el;
-					newNode.moves = minP.moves + 1;
-					newNode.previous = minP;
-					queue.insert(newNode);
-				}
-				
-			}
-			
-			minP = queue.delMin();
-		}
+//		while(!minP.board.isGoal()) {
+//			
+//			for (Board el : minP.board.neighbors()) {
+//				// Checks if previous is null or if this neighbor does not equal previous board
+//				if (minP.previous == null || !el.equals(minP.previous.board)) {
+//					SearchNode newNode = new SearchNode();
+//					newNode.board = el;
+//					newNode.moves = minP.moves + 1;
+//					newNode.previous = minP;
+//					queue.insert(newNode);
+//				}
+//				
+//			}
+//			
+//			
+//			minP = queue.delMin();
+//		}
 	}
 	
 	private class SearchNode {
