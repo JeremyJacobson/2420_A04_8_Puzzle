@@ -9,6 +9,7 @@ import java.util.Comparator;
 
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.MinPQ;
+import edu.princeton.cs.algs4.Stack;
 import edu.princeton.cs.algs4.StdOut;
 
 /**
@@ -19,6 +20,7 @@ import edu.princeton.cs.algs4.StdOut;
  *
  */
 public class Solver {
+	private SearchNode goalNode;
 	
 	/**
 	 * Finds a solution to the initial board by 
@@ -30,13 +32,12 @@ public class Solver {
 		MinPQ<SearchNode> queue = new MinPQ<SearchNode>(orderMan);
 		SearchNode node = new SearchNode();
 		node.board = initial;
-		queue.insert(node);
 		
-		SearchNode minP = queue.delMin(); // initial node with smallest priority board
+		SearchNode minP = node; // initial min Node with initial board
 		
 		// while the minimum priority nodes board is not equal to the goal board
 		while(!minP.board.isGoal()) {
-			
+
 			for (Board el : minP.board.neighbors()) {
 				// Checks if previous is null or if this neighbor does not equal previous board
 				if (minP.previous == null || !el.equals(minP.previous.board)) {
@@ -45,14 +46,13 @@ public class Solver {
 					newNode.moves = minP.moves + 1;
 					newNode.previous = minP;
 					queue.insert(newNode);
-					System.out.println(newNode.board.toString());
 				}
-				
 			}
-			
 			
 			minP = queue.delMin();
 		}
+		
+		goalNode = minP;
 	}
 	
 	private class SearchNode {
@@ -93,7 +93,7 @@ public class Solver {
 	 * @return
 	 */
     public int moves() {
-    	return 0;//TODO
+    	return goalNode.moves;
     }
     
     /**
@@ -102,13 +102,17 @@ public class Solver {
      * @return
      */
     public Iterable<Board> solution() {
-    	return null;//TODO
+    	Stack<Board> solutions = new Stack<Board>();
+    	for (SearchNode node = goalNode; node != null; node = node.previous) {
+    		solutions.push(node.board);
+    	}
+    	return solutions;
     }
     
     /* * * * * * * * * * Test Client * * * * * * * * * */
 	public static void main(String[] args) {
 		// create initial board from file
-	    In in = new In("/a04/resources/puzzle04.txt");
+	    In in = new In("/a04/resources/puzzle28.txt");
 	    int N = in.readInt();
 	    int[][] blocks = new int[N][N];
 	    for (int i = 0; i < N; i++)
