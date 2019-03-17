@@ -28,6 +28,14 @@ public class Solver {
 	 * @param initial
 	 */
 	public Solver(Board initial) {
+		if (!initial.isSolvable()) {
+			throw new IllegalArgumentException();
+		}
+		
+		if (initial == null) {
+			throw new NullPointerException();
+		}
+		
 		PriorityOrderManhattan orderMan = new PriorityOrderManhattan();
 		MinPQ<SearchNode> queue = new MinPQ<SearchNode>(orderMan);
 		SearchNode node = new SearchNode();
@@ -68,19 +76,6 @@ public class Solver {
 			if (o1.board.manhattan() + o1.moves > o2.board.manhattan() + o2.moves)
 				return 1;
 			if (o1.board.manhattan() + o1.moves < o2.board.manhattan() + o2.moves)
-				return -1;
-			return 0;
-		}
-		
-	}
-	
-	private class PriorityOrderHamming implements Comparator<SearchNode> {
-
-		@Override
-		public int compare(SearchNode o1, SearchNode o2) {
-			if (o1.board.hamming() + o1.moves > o2.board.hamming() + o2.moves)
-				return 1;
-			if (o1.board.hamming() + o1.moves < o2.board.hamming() + o2.moves)
 				return -1;
 			return 0;
 		}
