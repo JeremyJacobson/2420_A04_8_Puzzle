@@ -33,35 +33,31 @@ public class Solver {
 		queue.insert(node);
 		
 		SearchNode minP = queue.delMin(); // initial node with smallest priority board
-		//Prints out neighbors
-		System.out.println(minP.board.toString());
-		for (Board el : minP.board.neighbors()) {
-			System.out.println(el.toString());
-		}
 		
 		// while the minimum priority nodes board is not equal to the goal board
-//		while(!minP.board.isGoal()) {
-//			
-//			for (Board el : minP.board.neighbors()) {
-//				// Checks if previous is null or if this neighbor does not equal previous board
-//				if (minP.previous == null || !el.equals(minP.previous.board)) {
-//					SearchNode newNode = new SearchNode();
-//					newNode.board = el;
-//					newNode.moves = minP.moves + 1;
-//					newNode.previous = minP;
-//					queue.insert(newNode);
-//				}
-//				
-//			}
-//			
-//			
-//			minP = queue.delMin();
-//		}
+		while(!minP.board.isGoal()) {
+			
+			for (Board el : minP.board.neighbors()) {
+				// Checks if previous is null or if this neighbor does not equal previous board
+				if (minP.previous == null || !el.equals(minP.previous.board)) {
+					SearchNode newNode = new SearchNode();
+					newNode.board = el;
+					newNode.moves = minP.moves + 1;
+					newNode.previous = minP;
+					queue.insert(newNode);
+					System.out.println(newNode.board.toString());
+				}
+				
+			}
+			
+			
+			minP = queue.delMin();
+		}
 	}
 	
 	private class SearchNode {
 		private Board board;
-		private int moves = 0;
+		private int moves;
 		private SearchNode previous;
 	}
 	
@@ -112,7 +108,7 @@ public class Solver {
     /* * * * * * * * * * Test Client * * * * * * * * * */
 	public static void main(String[] args) {
 		// create initial board from file
-	    In in = new In("/a04/resources/puzzle30.txt");
+	    In in = new In("/a04/resources/puzzle04.txt");
 	    int N = in.readInt();
 	    int[][] blocks = new int[N][N];
 	    for (int i = 0; i < N; i++)
