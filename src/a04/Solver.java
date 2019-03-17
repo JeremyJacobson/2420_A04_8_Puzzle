@@ -1,7 +1,7 @@
 /*************************************************
  * Authors: Jeremy Jacobson and Christopher Munoz
  * Assignment: 8 Puzzle
- * Date: TODO
+ * Date: Mar 16, 2019
  *************************************************/
 package a04;
 
@@ -32,16 +32,12 @@ public class Solver {
 			throw new IllegalArgumentException();
 		}
 		
-		if (initial == null) {
-			throw new NullPointerException();
-		}
-		
 		PriorityOrderManhattan orderMan = new PriorityOrderManhattan();
 		MinPQ<SearchNode> queue = new MinPQ<SearchNode>(orderMan);
 		SearchNode node = new SearchNode();
 		node.board = initial;
 		
-		SearchNode minP = node; // initial min Node with initial board
+		SearchNode minP = node; // initialize min Node with initial board
 		
 		// while the minimum priority nodes board is not equal to the goal board
 		while(!minP.board.isGoal()) {
@@ -107,7 +103,7 @@ public class Solver {
     /* * * * * * * * * * Test Client * * * * * * * * * */
 	public static void main(String[] args) {
 		// create initial board from file
-	    In in = new In("/a04/resources/puzzle28.txt");
+	    In in = new In("/a04/resources/puzzle3x3-unsolvable.txt");
 	    int N = in.readInt();
 	    int[][] blocks = new int[N][N];
 	    for (int i = 0; i < N; i++)

@@ -1,7 +1,7 @@
 /*************************************************
  * Authors: Jeremy Jacobson and Christopher Munoz
  * Assignment: 8 Puzzle
- * Date: TODO
+ * Date: Mar 16, 2019
  *************************************************/
 package a04;
 
@@ -258,17 +258,6 @@ public class Board {
 			sb.append("\n");
 		}
 		return sb.toString();
-	}
-	
-	/**
-	 * Used for SolverVisualizer. TODO remove before submitting.
-	 * Returns the tile at the specified index on the board.
-	 * @param row
-	 * @param col
-	 * @return
-	 */
-	public int tileAt(int row, int col) {
-		return 0;//TODO Jeremy
 	}
 
 	/* * * * * * * * * * Test Client * * * * * * * * * */
