@@ -35,6 +35,11 @@ public class Board {
 				oneD[transfer++] = blocks[i][j];					// Transferring to 1D Array.
 			}
 		}
+		for (int i = 0; i < oneD.length; i++) {
+			if (oneD[i] == 0) {
+				zeroIndex = i;
+			}
+		}
 	}
 	
 	/**
@@ -82,9 +87,6 @@ public class Board {
 		for (int i = 0; i < oneD.length; i++) {
 			if (oneD[i] == i + 1 || oneD[i] == 0) {						// If number is in correct place or equals 0
 																		// then skips the number.
-				if (oneD[i] == 0) {
-					zeroIndex = i;										// Records the index of 0 on the board.
-				}
 				continue;
 			}
 			manhattan += Math.abs((i / N) - ((oneD[i] - 1) / N));		// Accounts for how many rows the current
@@ -129,14 +131,6 @@ public class Board {
 	 * @return
 	 */
 	public boolean isSolvable() {
-		// turn 2D array into 1D array O(n)
-//		int[] oneD = new int[N * N];
-//
-//		for (int i = 0; i < N; i++) {
-//			for (int j = 0; j < N; j++) {
-//				oneD[(i * N) + j] = blocks[i][j];
-//			}
-//		}
 
 		// count the number of inversions in 1D array O(n log n)?
 		int inversions = 0;
@@ -190,21 +184,20 @@ public class Board {
 	 * @return
 	 */
 	public Iterable<Board> neighbors() {
-		int[] temp = oneD.clone();
 
 		if (zeroIndex < oneD.length - N) {
-			southNeighbor(temp, zeroIndex);
+			swap(oneD, zeroIndex, zeroIndex + N);
 		}
 		if (zeroIndex > N - 1) {
-			northNeighbor(temp, zeroIndex);
+			swap(oneD, zeroIndex, zeroIndex - N);
 		}
 		
 		if (zeroIndex % N != 0) {
-			westNeighbor(temp, zeroIndex);
+			swap(oneD, zeroIndex, zeroIndex - 1);
 		}
 		
 		if (zeroIndex % N != N - 1) {
-			eastNeighbor(temp, zeroIndex);
+			swap(oneD, zeroIndex, zeroIndex + 1);
 		}
 		return neighbors;
 	}
@@ -212,53 +205,14 @@ public class Board {
 	/* = = = = = = = = = = = HELPER METHODS START = = = = = = = = = = = */
 	
 	/**
-	 * Swaps the 0 tile with the tile to the right.
+	 * Swaps the 0 tile with the index of swap parameter that is passed to the method.
 	 * @param temp
 	 * @param zeroIndex
 	 */
-	private void eastNeighbor(int[] temp, int zeroIndex) {
-		int swapTile = temp[zeroIndex + 1];
-		temp[zeroIndex + 1] = 0;
-		temp[zeroIndex] = swapTile;
-
-		neighbors.push(neighborBoard(temp));
-	}
-	
-	/**
-	 * Swaps the 0 tile with the tile to the left.
-	 * @param temp
-	 * @param zeroIndex
-	 */
-	private void westNeighbor(int[] temp, int zeroIndex) {
-		int swapTile = temp[zeroIndex - 1];
-		temp[zeroIndex - 1] = 0;
-		temp[zeroIndex] = swapTile;
-
-		neighbors.push(neighborBoard(temp));
-	}
-	
-	/**
-	 * Swaps the 0 tile with the tile above it.
-	 * @param temp
-	 * @param zeroIndex
-	 */
-	private void northNeighbor(int[] temp, int zeroIndex) {
-		int swapTile = temp[zeroIndex - 3];
-		temp[zeroIndex - 3] = 0;
-		temp[zeroIndex] = swapTile;
-
-		neighbors.push(neighborBoard(temp));
-	}
-	
-	/**
-	 * Swaps the 0 tile with the tile below it.
-	 * @param temp
-	 * @param zeroIndex
-	 */
-	private void southNeighbor(int[] temp, int zeroIndex) {
-		int swapTile = temp[zeroIndex + 3];
-		temp[zeroIndex + 3] = 0;
-		temp[zeroIndex] = swapTile;
+	private void swap(int[] oneD, int zeroIndex, int swap) {
+		int[] temp = oneD.clone();
+		temp[zeroIndex] = temp[swap];
+		temp[swap] = 0;
 
 		neighbors.push(neighborBoard(temp));
 	}
